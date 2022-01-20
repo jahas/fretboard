@@ -1,4 +1,6 @@
 from enum import Enum
+
+
 def get_letters(file_name: str) -> list:
     with open(file_name, 'r') as f:
         notes = f.readlines()
@@ -20,6 +22,7 @@ class NoteKind(Enum):
     PRYMA = NoteDecorator(lambda x: f"=({x})=", "=")
     TERCJA = NoteDecorator(lambda x: f"=={x}==", "-")
     KWINTA = NoteDecorator(lambda x: f"={x}=", "-")
+    SEPTYMA = NoteDecorator(lambda x: f"7={x}=7", "-")
     DODATKOWA = NoteDecorator(lambda x: f"+{x}+", "-")
     ZWYKLA = NoteDecorator(lambda x: x.lower(), "-")
 
@@ -159,6 +162,26 @@ def get_major_chord_notes(prime: str, notes: list) -> list:
         Note(ordered_notes[7], NoteKind.KWINTA)
     ]
 
+def get_minor_chord_7_notes(prime: str, notes: list) -> list:
+    game_notes = get_minor_game_notes(prime, notes)
+    ordered_notes = order_notes(prime, notes)
+    return [
+        Note(prime, NoteKind.PRYMA),
+        Note(ordered_notes[3], NoteKind.TERCJA),
+        Note(ordered_notes[7], NoteKind.KWINTA),
+        Note(ordered_notes[10], NoteKind.SEPTYMA)
+        # Note(game_notes[-1].name, NoteKind.SEPTYMA),
+    ]
+def get_major_chord_7_notes(prime: str, notes: list) -> list:
+    game_notes = get_major_game_notes(prime, notes)
+    ordered_notes = order_notes(prime, notes)
+    return [
+        Note(prime, NoteKind.PRYMA),
+        Note(ordered_notes[4], NoteKind.TERCJA),
+        Note(ordered_notes[7], NoteKind.KWINTA),
+        Note(ordered_notes[10], NoteKind.SEPTYMA)
+        # Note(game_notes[-1].name, NoteKind.SEPTYMA),
+    ]
 def print_fretboard_with_selected_notes(title: str, sel_notes:list, notes: list):
     print(f"==== {title} ====")
     print(print_fretboard(sel_notes, notes))
@@ -172,6 +195,14 @@ def print_fretboard_with_major_chord(prime: str, notes: list):
 def print_fretboard_with_minor_chord(prime: str, notes: list):
     sel_notes = get_minor_chord_notes(prime, notes)
     print_fretboard_with_selected_notes(f"Akord {prime.lower()} moll", sel_notes, notes)
+
+def print_fretboard_with_major_chord_7(prime: str, notes: list):
+    sel_notes = get_major_chord_7_notes(prime, notes)
+    print_fretboard_with_selected_notes(f"Akord {prime} dur 7", sel_notes, notes)
+
+def print_fretboard_with_minor_chord_7(prime: str, notes: list):
+    sel_notes = get_minor_chord_7_notes(prime, notes)
+    print_fretboard_with_selected_notes(f"Akord {prime.lower()} moll 7", sel_notes, notes)
 
 def print_fretboard_with_major_pentatonic(prime: str, notes: list):
     sel_notes = get_major_pentatonic_notes(prime, notes)
@@ -197,7 +228,12 @@ def print_both_chords(primes:list, notes:list):
     for prime in primes:
         print_fretboard_with_major_chord(prime, notes)
         print_fretboard_with_minor_chord(prime, notes)
-        
+
+def print_both_chords_7(primes:list, notes:list):
+    for prime in primes:
+        print_fretboard_with_major_chord_7(prime, notes)
+        print_fretboard_with_minor_chord_7(prime, notes)
+
 def print_both_pentatonics(primes:list, notes:list):
     for prime in primes:
         print_fretboard_with_major_pentatonic(prime, notes)
@@ -219,6 +255,7 @@ print_legend()
 # print_fretboard_with_major_chord("A", notes)
 # print_fretboard_with_minor_chord("A", notes)
 # print_both_chords(primes, notes)
-print_both_pentatonics(primes, notes)
+print_both_chords_7(primes, notes)
+# print_both_pentatonics(primes, notes)
 # print_both_games(primes, notes)
 # print_fretboard_with_selected_notes("Gryf pusty", [], notes)
